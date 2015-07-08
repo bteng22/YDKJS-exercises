@@ -1,30 +1,67 @@
-const PHONE_PRICE = 99.99;
-const ACCESSORY_PRICE = 9.99;
-const SPENDING_THRESHOLD = 200;
+class RadioShack {
+  constructor(props) {
+    this.phone_price = props.phone_price;
+    this.accessory_price = props.accessory_price;
+    this.customer = props.customer;
+  }
 
-var bank_balance = 303.91;
-var purchase_amount = 0;
+  purchasePhone() {
+    customer.calculatePhonePurchase(this.phone_price);
+  }
 
-var purchasePhone = () => {
-  purchase_amount += PHONE_PRICE;
-  bank_balance -= PHONE_PRICE;
-}
+  purchaseAccessory() {
+    customer.calculateAccessoryPurchase(this.accessory_price);
+  }
 
-var purchaseAccessory = () => {
-  purchase_amount += ACCESSORY_PRICE;
-  bank_balance -= ACCESSORY_PRICE;
-}
-
-var isAmountLessThanThreshold = () => {
-  return purchase_amount < SPENDING_THRESHOLD;
-}
-
-while(bank_balance > PHONE_PRICE) {
-  purchasePhone();
-  if(isAmountLessThanThreshold()) {
-    purchaseAccessory();
+  makePurchase() {
+    this.purchasePhone();
+    if(customer.isTotalPurchaseLessThanThreshold()) {
+      this.purchaseAccessory();
+    }
   }
 }
 
-console.log(purchase_amount);
-console.log(bank_balance);
+class Customer {
+  constructor(props) {
+    this.spending_threshold = props.spending_threshold;
+    this.bank_balance = props.bank_balance;
+    this.total_purchase = props.total_purchase;
+  }
+
+  checkBalance() {
+    console.log(this.total_purchase);
+    console.log(this.bank_balance);
+  }
+
+  calculatePhonePurchase(phone_price) {
+    this.total_purchase += phone_price;
+    this.bank_balance -= phone_price;
+  }
+
+  calculateAccessoryPurchase(accessory_price) {
+    this.total_purchase += accessory_price;
+    this.bank_balance -= accessory_price;
+  }
+
+  isTotalPurchaseLessThanThreshold() {
+    return this.total_purchase < this.spending_threshold;
+  }
+}
+
+var customer = new Customer({
+  bank_balance: 303.91,
+  total_purchase: 0,
+  spending_threshold: 200
+});
+
+var radioShack = new RadioShack({
+  phone_price: 99.99,
+  accessory_price: 9.99,
+  customer: customer
+});
+
+while(customer.bank_balance > radioShack.phone_price) {
+  radioShack.makePurchase();
+}
+
+customer.checkBalance();
